@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Character/PACharacterBase.h"
+#include "InputActionValue.h"
 #include "PACharacterPlayer.generated.h"
 
 
@@ -27,6 +28,10 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+// Camera Section
+public:
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
 	// SpringArm
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class USpringArmComponent> CameraBoom;
@@ -49,4 +54,21 @@ private:
 
 public:
 	FORCEINLINE UCameraComponent* GetCamera() { return MyCamera; }
+
+
+// Input Section
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UInputMappingContext> DefaultMappingContext;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UInputAction> JumpAction;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UInputAction> MoveAction;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UInputAction> LookAction;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UInputAction> ChangeCameraAction;
+
+	void Move(const FInputActionValue& Value);
+	void Look(const FInputActionValue& Value);
 };
