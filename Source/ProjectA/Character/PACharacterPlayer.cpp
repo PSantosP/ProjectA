@@ -18,15 +18,15 @@ APACharacterPlayer::APACharacterPlayer()
 
 
 	// Camera
-	TpsCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("TPSCamera"));
-	TpsCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
-	TpsCamera->bUsePawnControlRotation = false;
+	TpsFollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("TpsFollowCamera"));
+	TpsFollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
+	TpsFollowCamera->bUsePawnControlRotation = false;
 
-	FpsCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FPSCamera"));
-	FpsCamera->SetupAttachment(GetMesh(), TEXT("FX_Head"));
-	FpsCamera->bUsePawnControlRotation = false;
+	FpsFollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FpsFollowCamera"));
+	FpsFollowCamera->SetupAttachment(GetMesh(), TEXT("FX_Head"));
+	FpsFollowCamera->bUsePawnControlRotation = false;
 
-	FpsCamera->SetAutoActivate(false);
+	FpsFollowCamera->SetAutoActivate(false);
 
 
 
@@ -86,21 +86,21 @@ void APACharacterPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 
 void APACharacterPlayer::SetChangeCamera()
 {
-	ensure(TpsCamera);
-	ensure(FpsCamera);
-	if (IsValid(TpsCamera) && IsValid(FpsCamera))
+	ensure(FpsFollowCamera);
+	ensure(TpsFollowCamera);
+	if (IsValid(TpsFollowCamera) && IsValid(FpsFollowCamera))
 	{
 		switch (CameraType)
 		{
 		case ECAMERA::TPS:
-			TpsCamera->Deactivate();
-			FpsCamera->Activate();
-			MyCamera = TpsCamera;
+			TpsFollowCamera->Activate();
+			FpsFollowCamera->Deactivate();
+			MyCamera = TpsFollowCamera;
 			break;
 		case ECAMERA::FPS:
-			TpsCamera->Activate();
-			FpsCamera->Deactivate();
-			MyCamera = FpsCamera;
+			TpsFollowCamera->Deactivate();
+			FpsFollowCamera->Activate();
+			MyCamera = FpsFollowCamera;
 			break;
 		}
 	}

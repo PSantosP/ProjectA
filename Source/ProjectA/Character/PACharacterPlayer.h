@@ -38,11 +38,11 @@ public:
 
 	// ThirdCamera
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, Meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<class UCameraComponent> TpsCamera;
+	TObjectPtr<class UCameraComponent> TpsFollowCamera;
 
 	// FirstCamera
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, Meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<class UCameraComponent> FpsCamera;
+	TObjectPtr<class UCameraComponent> FpsFollowCamera;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera, Meta = (AllowPrivateAccess = "true"))
 	ECAMERA CameraType;
