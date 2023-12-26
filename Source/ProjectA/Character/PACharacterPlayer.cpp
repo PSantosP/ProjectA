@@ -7,6 +7,8 @@
 #include "InputMappingContext.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "GameFramework/CharacterMovementComponent.h"
+
 
 APACharacterPlayer::APACharacterPlayer()
 {
@@ -18,17 +20,22 @@ APACharacterPlayer::APACharacterPlayer()
 
 
 	// Camera
-	TpsFollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("TpsFollowCamera"));
+	UCameraComponent* TpsFollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("TpsFollowCamera"));
 	TpsFollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	TpsFollowCamera->bUsePawnControlRotation = false;
 
-	FpsFollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FpsFollowCamera"));
+	UCameraComponent* FpsFollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FpsFollowCamera"));
 	FpsFollowCamera->SetupAttachment(GetMesh(), TEXT("FX_Head"));
-	FpsFollowCamera->bUsePawnControlRotation = false;
+	FpsFollowCamera->bUsePawnControlRotation = true;
+	FpsFollowCamera->SetRelativeRotation(FRotator(180.f, 0.f, 0.f));
 
 	FpsFollowCamera->SetAutoActivate(false);
 
+	CameraMap.Emplace(ECAMERA::TPS, TpsFollowCamera);
+	CameraMap.Emplace(ECAMERA::FPS, FpsFollowCamera);
 
+	CameraType = ECAMERA::TPS;
+	MyCamera = CameraMap[CameraType];
 
 	// Input
 	static ConstructorHelpers::FObjectFinder<UInputMappingContext> DefaultMappingContextRef(TEXT("/Game/ProjectA/Input/IMC_Default.IMC_Default"));
@@ -70,6 +77,7 @@ void APACharacterPlayer::BeginPlay()
 	{
 		Subsystem->AddMappingContext(DefaultMappingContext, 0);
 	}
+	SetChangeCamera();
 }
 
 void APACharacterPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -81,33 +89,15 @@ void APACharacterPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 	EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
 	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &APACharacterPlayer::Move);
 	EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &APACharacterPlayer::Look);
-	EnhancedInputComponent->BindAction(ChangeCameraAction, ETriggerEvent::Triggered, this, &APACharacterPlayer::SetChangeCamera);
+	EnhancedInputComponent->BindAction(ChangeCameraAction, ETriggerEvent::Started, this, &APACharacterPlayer::SetChangeCamera);
 }
 
 void APACharacterPlayer::SetChangeCamera()
 {
-	ensure(FpsFollowCamera);
-	ensure(TpsFollowCamera);
-	if (IsValid(TpsFollowCamera) && IsValid(FpsFollowCamera))
-	{
-		switch (CameraType)
-		{
-		case ECAMERA::TPS:
-			TpsFollowCamera->Activate();
-			FpsFollowCamera->Deactivate();
-			MyCamera = TpsFollowCamera;
-			break;
-		case ECAMERA::FPS:
-			TpsFollowCamera->Deactivate();
-			FpsFollowCamera->Activate();
-			MyCamera = FpsFollowCamera;
-			break;
-		}
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("ERRORORORORORR"));
-	}
+	CameraType = CameraType == ECAMERA::TPS ? ECAMERA::FPS : ECAMERA::TPS;
+	MyCamera->Deactivate();
+	MyCamera = CameraMap[CameraType];
+	MyCamera->Activate();
 }
 
 void APACharacterPlayer::Move(const FInputActionValue& Value)
