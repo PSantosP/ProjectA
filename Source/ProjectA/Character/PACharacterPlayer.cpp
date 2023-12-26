@@ -15,7 +15,43 @@ APACharacterPlayer::APACharacterPlayer()
 
 
 	// Camera
-	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
-	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
-	FollowCamera->bUsePawnControlRotation = false;
+	TpsCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("TPSCamera"));
+	TpsCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
+	TpsCamera->bUsePawnControlRotation = false;
+
+	FpsCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FPSCamera"));
+	FpsCamera->SetupAttachment(GetMesh(), TEXT("FX_Head"));
+	FpsCamera->bUsePawnControlRotation = false;
+
+	FpsCamera->SetAutoActivate(false);
 }
+
+void APACharacterPlayer::BeginPlay()
+{
+	Super::BeginPlay();
+	//SetChangeCamera();
+}
+
+void APACharacterPlayer::SetChangeCamera()
+{
+	ensure(TpsCamera);
+	ensure(FpsCamera);
+	if (IsValid(TpsCamera) && IsValid(FpsCamera))
+	{
+		switch (CameraType)
+		{
+		case ECAMERA::TPS:
+			TpsCamera->Deactivate();
+			FpsCamera->Activate();
+			MyCamera = TpsCamera;
+			break;
+		case ECAMERA::FPS:
+			TpsCamera->Activate();
+			FpsCamera->Deactivate();
+			MyCamera = FpsCamera;
+			break;
+		}
+	}
+}
+
+

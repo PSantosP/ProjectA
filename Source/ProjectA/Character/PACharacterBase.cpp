@@ -32,13 +32,13 @@ APACharacterBase::APACharacterBase()
 	GetMesh()->SetCollisionProfileName(TEXT("CharacterMesh"));
 
 	// MeshLoad
-	static ConstructorHelpers::FObjectFinder<USkeletalMesh> CharacterMeshRef(TEXT(""));
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh> CharacterMeshRef(TEXT("/Game/ParagonLtBelica/Characters/Heroes/Belica/Meshes/Belica.Belica"));
 	if (CharacterMeshRef.Succeeded())
 	{
 		GetMesh()->SetSkeletalMesh(CharacterMeshRef.Object);
 	}
 
-	static ConstructorHelpers::FClassFinder<UAnimInstance> AnimInstanceClassRef(TEXT(""));
+	static ConstructorHelpers::FClassFinder<UAnimInstance> AnimInstanceClassRef(TEXT("/Game/ParagonLtBelica/Characters/Heroes/Belica/LtBelica_AnimBlueprint.LtBelica_AnimBlueprint_C"));
 	if (AnimInstanceClassRef.Succeeded())
 	{
 		GetMesh()->SetAnimInstanceClass(AnimInstanceClassRef.Class);

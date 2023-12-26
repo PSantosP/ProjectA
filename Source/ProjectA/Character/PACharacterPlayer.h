@@ -6,6 +6,15 @@
 #include "Character/PACharacterBase.h"
 #include "PACharacterPlayer.generated.h"
 
+
+UENUM()
+enum class ECAMERA : uint8
+{
+	TPS,
+	FPS,
+	COUNT,
+};
+
 /**
  * 
  */
@@ -16,12 +25,28 @@ class PROJECTA_API APACharacterPlayer : public APACharacterBase
 public:
 	APACharacterPlayer();
 protected:
+	virtual void BeginPlay() override;
+
 	// SpringArm
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class USpringArmComponent> CameraBoom;
 
-	// Camera
+	// ThirdCamera
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, Meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<class UCameraComponent> FollowCamera;
-	
+	TObjectPtr<class UCameraComponent> TpsCamera;
+
+	// FirstCamera
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UCameraComponent> FpsCamera;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera, Meta = (AllowPrivateAccess = "true"))
+	ECAMERA CameraType;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UCameraComponent> MyCamera;
+private:
+	void SetChangeCamera();
+
+public:
+	FORCEINLINE UCameraComponent* GetCamera() { return MyCamera; }
 };
