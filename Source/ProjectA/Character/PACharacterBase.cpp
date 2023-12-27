@@ -5,7 +5,6 @@
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
-
 APACharacterBase::APACharacterBase()
 {
 	// UseControllerRotation

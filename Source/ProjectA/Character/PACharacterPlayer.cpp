@@ -37,6 +37,7 @@ APACharacterPlayer::APACharacterPlayer()
 	CameraType = ECAMERA::TPS;
 	MyCamera = CameraMap[CameraType];
 
+
 	// Input
 	static ConstructorHelpers::FObjectFinder<UInputMappingContext> DefaultMappingContextRef(TEXT("/Game/ProjectA/Input/IMC_Default.IMC_Default"));
 	if (DefaultMappingContextRef.Succeeded())
