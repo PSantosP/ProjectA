@@ -15,6 +15,7 @@ public class ProjectA : ModuleRules
 			"Engine",
 			"InputCore",
             "EnhancedInput",
+			"AIModule"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
