@@ -25,9 +25,8 @@ APACharacterPlayer::APACharacterPlayer()
 	TpsFollowCamera->bUsePawnControlRotation = false;
 
 	UCameraComponent* FpsFollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FpsFollowCamera"));
-	FpsFollowCamera->SetupAttachment(GetMesh(), TEXT("FX_Head"));
-	FpsFollowCamera->bUsePawnControlRotation = true;
-	FpsFollowCamera->SetRelativeRotation(FRotator(180.f, 0.f, 0.f));
+	FpsFollowCamera->SetupAttachment(GetMesh(), TEXT("HEAD_SOCKET"));
+	FpsFollowCamera->bUsePawnControlRotation = true;	
 
 	FpsFollowCamera->SetAutoActivate(false);
 
@@ -78,7 +77,7 @@ void APACharacterPlayer::BeginPlay()
 	{
 		Subsystem->AddMappingContext(DefaultMappingContext, 0);
 	}
-	SetChangeCamera();
+	/*SetChangeCamera();*/
 }
 
 void APACharacterPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -99,6 +98,15 @@ void APACharacterPlayer::SetChangeCamera()
 	MyCamera->Deactivate();
 	MyCamera = CameraMap[CameraType];
 	MyCamera->Activate();
+	switch (CameraType)
+	{
+	case ECAMERA::TPS:
+		bUseControllerRotationYaw = false;
+		break;
+	case ECAMERA::FPS:
+		bUseControllerRotationYaw = true;
+		break;
+	}
 }
 
 void APACharacterPlayer::Move(const FInputActionValue& Value)

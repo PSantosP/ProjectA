@@ -31,7 +31,7 @@ APACharacterBase::APACharacterBase()
 	GetMesh()->SetCollisionProfileName(TEXT("CharacterMesh"));
 
 	// MeshLoad
-	static ConstructorHelpers::FObjectFinder<USkeletalMesh> CharacterMeshRef(TEXT("/Game/ParagonLtBelica/Characters/Heroes/Belica/Meshes/Belica.Belica"));
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh> CharacterMeshRef(TEXT("/Game/ControlRig/Characters/Mannequins/Meshes/SKM_Manny.SKM_Manny"));
 	if (CharacterMeshRef.Succeeded())
 	{
 		GetMesh()->SetSkeletalMesh(CharacterMeshRef.Object);
