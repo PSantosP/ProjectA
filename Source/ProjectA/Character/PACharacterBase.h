@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Runtime/AIModule/Classes/GenericTeamAgentInterface.h"
 #include "PACharacterBase.generated.h"
 
 UCLASS()
-class PROJECTA_API APACharacterBase : public ACharacter
+class PROJECTA_API APACharacterBase : public ACharacter, public IGenericTeamAgentInterface
 {
 	GENERATED_BODY()
 
@@ -48,4 +49,15 @@ protected:
 private:
 	// Camera Section
 	TObjectPtr<class UCameraComponent> CameraComponent;
+
+	// Team Section
+private:
+
+	UPROPERTY(ReplicatedUsing = OnRep_MyTeamID)
+	FGenericTeamId MyTeamID;
+
+private:
+	UFUNCTION()
+	void OnRep_MyTeamID(FGenericTeamId OldTeamId);
+
 };

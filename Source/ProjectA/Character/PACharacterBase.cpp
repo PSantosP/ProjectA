@@ -7,6 +7,9 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
+// Interface
+#include "Runtime/AIModule/Classes/GenericTeamAgentInterface.h"
+
 // Net
 #include "Net/UnrealNetwork.h"
 
@@ -129,9 +132,16 @@ void APACharacterBase::NotifyControllerChanged()
 	// 이를 통해 Actor는 컨트롤 상태의 변화에 대응
 }
 
-void APACharacterBase::PossessedBy(AController* NewContorller)
+void APACharacterBase::PossessedBy(AController* NewController)
 {
-	
+	const FGenericTeamId OldTeamId = MyTeamID;
+
+	Super::PossessedBy(NewController);
+
+	//if (IGenericTeamAgentInterface* ControllerAsTeamProvider = Cast<IGenericTeamAgentInterface>(NewController))
+	//{
+	//	MyTeamID = ControllerAsTeamProvider->GetGenericTeamId();
+	//}
 }
 
 void APACharacterBase::UnPossessed()
@@ -140,4 +150,9 @@ void APACharacterBase::UnPossessed()
 
 void APACharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
+}
+
+void APACharacterBase::OnRep_MyTeamID(FGenericTeamId OldTeamId)
+{
+
 }
