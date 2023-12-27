@@ -49,7 +49,7 @@ private:
 
 public:
 	FORCEINLINE UCameraComponent* GetCamera() { return MyCamera; }
-
+	FORCEINLINE bool IsSprint() { return bIsSprint; }
 
 // Input Section
 protected:
@@ -63,7 +63,12 @@ protected:
 	TObjectPtr<class UInputAction> LookAction;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UInputAction> ChangeCameraAction;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UInputAction> SprintAction;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Input, Meta = (AllowPrivateAccess = "true"))
+	uint8 bIsSprint : 1;
 
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
+	void Sprint(const FInputActionValue& Value);
 };

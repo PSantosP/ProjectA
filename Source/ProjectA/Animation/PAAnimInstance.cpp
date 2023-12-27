@@ -4,18 +4,26 @@
 #include "Animation/PAAnimInstance.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Character/PACharacterPlayer.h"
 
 UPAAnimInstance::UPAAnimInstance()
 {
 	MovingThreshould = 0.5f;
 	JumpingThreshould = 100.0f;
+	bIsIdle = true;
+}
+
+UPAAnimInstance::UPAAnimInstance(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
+{
 }
 
 void UPAAnimInstance::NativeInitializeAnimation()
 {
 	Super::NativeInitializeAnimation();
 
-	Owner = Cast<ACharacter>(GetOwningActor());
+	Owner = Cast<APACharacterPlayer>(GetOwningActor());
+
 	if (Owner != nullptr)
 	{
 		Movement = Owner->GetCharacterMovement();
@@ -33,5 +41,6 @@ void UPAAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		bIsIdle = Speed < MovingThreshould;
 		bIsFalling = Movement->IsFalling();
 		bIsJumping = bIsFalling & (Velocity.Z > JumpingThreshould);
+		bIsSprint = Owner->IsSprint();
 	}
 }

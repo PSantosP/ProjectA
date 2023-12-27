@@ -23,6 +23,7 @@ APACharacterPlayer::APACharacterPlayer()
 	UCameraComponent* TpsFollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("TpsFollowCamera"));
 	TpsFollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	TpsFollowCamera->bUsePawnControlRotation = false;
+	TpsFollowCamera->SetRelativeLocation(FVector(200.0f, 20.0f, 50.0f));
 
 	UCameraComponent* FpsFollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FpsFollowCamera"));
 	FpsFollowCamera->SetupAttachment(GetMesh(), TEXT("HEAD_SOCKET"));
@@ -63,6 +64,15 @@ APACharacterPlayer::APACharacterPlayer()
 	{
 		ChangeCameraAction = ChangeCameraActionRef.Object;
 	}
+	static ConstructorHelpers::FObjectFinder<UInputAction> SprintActionRef(TEXT("/Game/ProjectA/Input/IA_SprintAction.IA_SprintAction"));
+	if (SprintActionRef.Succeeded())
+	{
+		SprintAction = SprintActionRef.Object;
+	}
+
+
+	// sprint
+	bIsSprint = false;
 }
 
 void APACharacterPlayer::BeginPlay()
@@ -90,6 +100,8 @@ void APACharacterPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &APACharacterPlayer::Move);
 	EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &APACharacterPlayer::Look);
 	EnhancedInputComponent->BindAction(ChangeCameraAction, ETriggerEvent::Started, this, &APACharacterPlayer::SetChangeCamera);
+	EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Started, this, &APACharacterPlayer::Sprint);
+	EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this, &APACharacterPlayer::Sprint);
 }
 
 void APACharacterPlayer::SetChangeCamera()
@@ -129,5 +141,11 @@ void APACharacterPlayer::Look(const FInputActionValue& Value)
 
 	AddControllerYawInput(LookAxisVector.X);
 	AddControllerPitchInput(LookAxisVector.Y);
+}
+
+void APACharacterPlayer::Sprint(const FInputActionValue& Value)
+{
+	bIsSprint = bIsSprint == true ? false : true;
+	GetCharacterMovement()->MaxWalkSpeed = bIsSprint == true ? 700.f : 500.f;
 }
 

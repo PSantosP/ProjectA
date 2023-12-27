@@ -6,6 +6,8 @@
 #include "Animation/AnimInstance.h"
 #include "PAAnimInstance.generated.h"
 
+
+
 /**
  * 
  */
@@ -15,13 +17,14 @@ class PROJECTA_API UPAAnimInstance : public UAnimInstance
 	GENERATED_BODY()
 public:
 	UPAAnimInstance();
+	UPAAnimInstance(const FObjectInitializer& ObjectInitializer);
 	
 protected:
 	virtual void NativeInitializeAnimation() override;
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Character)
-	TObjectPtr<class ACharacter> Owner;
+	TObjectPtr<class APACharacterPlayer> Owner;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Character)
 	TObjectPtr<class UCharacterMovementComponent> Movement;
@@ -37,6 +40,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Character)
 	uint8 bIsIdle : 1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Character)
+	uint8 bIsSprint : 1;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Character)
 	uint8 bIsFalling : 1;
