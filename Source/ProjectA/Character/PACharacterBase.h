@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "Runtime/AIModule/Classes/GenericTeamAgentInterface.h"
+#include "GenericTeamAgentInterface.h"
 #include "PACharacterBase.generated.h"
 
 UCLASS()
